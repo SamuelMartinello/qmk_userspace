@@ -1,6 +1,8 @@
 {
     "userspace_version": "1.1",
     "build_targets": [
-        ["keychron/c1_pro_v2/ansi/rgb", "samuelmartinello"]
+        ["keychron/c1_pro_v2/ansi/rgb", "samuelmartinello"],
+        ["keychron/c1_pro_8k/ansi", "samuelmartinello"],
+        ["boardsource/unicorne", "samuelmartinello"]
     ]
 }
