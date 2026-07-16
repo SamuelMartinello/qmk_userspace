@@ -1,4 +1,5 @@
 {
+    "keyboard_name": "unicorne",
     "usb": {
         "vid": "0x4253",
         "pid": "0x0000"

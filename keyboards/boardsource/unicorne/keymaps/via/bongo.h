@@ -1,39 +1,22 @@
-//
-// Render left OLED display
-//
-static void render_status(void) {
-    
-    // WPM
-    oled_write_P(PSTR("      "), false);
-    sprintf(wpm_str, "%03d", get_current_wpm());
-    oled_write(wpm_str, false);
-    oled_write_P(PSTR("   WPM"), false);
+#include <stdio.h>
+#include "quantum.h"
 
-    // GUI keys indicator
-    if (gui_on) oled_write_P(PSTR("\n       "), false);
-    else oled_write_P(PSTR("\n      GUI   OFF"), false);
-    
-    // Caps lock indicator
-    led_t led_state = host_keyboard_led_state();
-    oled_write_P(led_state.caps_lock ? PSTR("\n      CAPS LOCK") : PSTR("\n       "), false);
+// OLED setup
+#define IDLE_FRAMES 5
+#define IDLE_SPEED 30
+#define TAP_FRAMES 2
+#define TAP_SPEED 40
+#define ANIM_FRAME_DURATION 200
+#define ANIM_SIZE 512
 
-    // Layer indicator
-    oled_write_P(PSTR("\n      LAYER "), false);
+bool gui_on = true;
+char wpm_str[10];
+uint32_t anim_timer = 0;
+uint32_t anim_sleep = 0;
+uint8_t current_idle_frame = 0;
+uint8_t current_tap_frame = 0;
 
-    switch (get_highest_layer(layer_state)) {
-        case 2:
-	    oled_write_P(PSTR("RAISE"), false);
-	    break;
-	// Layer 1
-        case 1:
-            oled_write_P(PSTR("LOWER"), false);
-            break;
-        // Layer 0
-        default:
-            oled_write_P(PSTR("BASE "), false);
-            break;
-    }
-}
+static long int oled_timeout = 600000; // 10 minutes
 
 //
 // Render right OLED display animation
@@ -139,19 +122,4 @@ static void render_anim(void) {
             }
         }
     }
-}
-
-//
-// OLED display rendering
-//
-bool oled_task_user(void) {
-    if (is_keyboard_master()) {
-        // Left side
-        render_status();
-    } else {
-        // Right side
-        render_anim();
-    }
-	
-	return 0;
 }
